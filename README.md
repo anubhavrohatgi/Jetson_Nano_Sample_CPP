@@ -7,11 +7,9 @@ The first thing you need to make sure is that cmake and git is installed. <br />
 
 $ sudo apt-get install cmake <br />
 $ sudo apt-get install git <br />
-Then we can clone the repo, and configuring submodules. <br />
 $ git clone https://github.com/dusty-nv/jetson-inference <br />
 $ cd jetson-inference <br />
 $ git submodule update --init <br />
-Then build the source, <br />
 $ mkdir build <br />
 $ cd build <br />
 $ cmake ../ <br />
