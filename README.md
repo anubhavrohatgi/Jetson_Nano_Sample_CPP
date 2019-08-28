@@ -3,7 +3,22 @@
 ## Writing Your Own Object Recognition Code
 Writing your own object recognition code isn’t actually that hard, and even in C++ can be done in a fairly compact manner if you’re not trying to do any complicated stuff around the task of classification.
 
-You can grab the code and the associated build file from the command line using wget, and then build it as follows.
+The first thing you need to make sure is that cmake and git is installed. <br />
+
+$ sudo apt-get install cmake <br />
+$ sudo apt-get install git <br />
+Then we can clone the repo, and configuring submodules. <br />
+$ git clone https://github.com/dusty-nv/jetson-inference <br />
+$ cd jetson-inference <br />
+$ git submodule update --init <br />
+Then build the source, <br />
+$ mkdir build <br />
+$ cd build <br />
+$ cmake ../ <br />
+$ make <br />
+$ sudo make install <br />
+
+You can grab the C++ code and the associated build file from the command line using wget, and then build it as follows.
 
 $ cd ~ <br />
 $ mkdir object_recognition <br />
