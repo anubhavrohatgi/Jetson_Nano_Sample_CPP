@@ -32,7 +32,7 @@ imageNet -- loaded 1000 class info entries <br />
 networks/bvlc_googlenet.caffemodel initialized. <br />
 class 0279 - 0.018535  (Arctic fox, white fox, Alopex lagopus) <br />
 class 0294 - 0.015127  (brown bear, bruin, Ursus arctos) <br />
-<bold /> class 0296 - 0.746165  (ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus) <br />
+### class 0296 - 0.746165  (ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus) <br />
 class 0342 - 0.017142  (wild boar, boar, Sus scrofa) <br />
 class 0360 - 0.085703  (otter) <br />
 image is recognized as 'ice bear, polar bear, Ursus Maritimus, Thalarctos maritimus' (class #296) with 74.616531% confidence
