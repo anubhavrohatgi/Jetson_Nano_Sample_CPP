@@ -13,7 +13,7 @@ $ wget https://gist.githubusercontent.com/aallan/9945105f8ae2aed47d96e23adb8dddc
 $ cmake .  <br />
 $ make <br />
 $ ./object_recognition polar.jpeg
-
+![](https://github.com/theerawatramchuen/Jetson_Nano_Sample_CPP/blob/master/polar.jpeg)
 imageNet -- loaded 1000 class info entries <br />
 networks/bvlc_googlenet.caffemodel initialized. <br />
 class 0279 - 0.018535  (Arctic fox, white fox, Alopex lagopus) <br />
