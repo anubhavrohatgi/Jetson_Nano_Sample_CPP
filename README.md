@@ -1,4 +1,5 @@
-# Writing Your Own Object Recognition Code C++ on Jetson Nano
+# Writing Your Own Object Recognition Code C++ on Jetson Nano with NVIDIA TensorRT
+## [Credit](https://blog.hackster.io/getting-started-with-the-nvidia-jetson-nano-developer-kit-43aa7c298797)
 
 ## Writing Your Own Object Recognition Code
 Writing your own object recognition code isn’t actually that hard, and even in C++ can be done in a fairly compact manner if you’re not trying to do any complicated stuff around the task of classification.
