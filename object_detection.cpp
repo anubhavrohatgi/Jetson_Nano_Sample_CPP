@@ -28,6 +28,8 @@ int main( int argc, char** argv ){
 
 	cv::cvtColor(img,img,CV_BGRA2RGBA);
 
+	img.convterTo(img,CV_32FC4, 1/255.0);
+
 	/*
 	 * create detection network
 	 */
@@ -47,15 +49,15 @@ int main( int argc, char** argv ){
 	 * load image from disk
 	 */
 	float* imgCPU    = NULL;
-	float* imgCUDA   = NULL;
+	float* imgCUDA   = img.ptr<float>();
 	int    imgWidth  = 0;
 	int    imgHeight = 0;
 		
-	if( !loadImageRGBA(imgFilename, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
-	{
-		printf("failed to load image '%s'\n", imgFilename);
-		return 0;
-	}
+	//if( !loadImageRGBA(imgFilename, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
+	//{
+	//	printf("failed to load image '%s'\n", imgFilename);
+	//	return 0;
+	//}
 	
 
 	/*
@@ -83,7 +85,7 @@ int main( int argc, char** argv ){
 	 */
 	printf("detectnet-console:  shutting down...\n");
 
-	CUDA(cudaFreeHost(imgCPU));
+	//CUDA(cudaFreeHost(imgCPU));
 	SAFE_DELETE(net);
 
 	printf("detectnet-console:  shutdown complete\n");
