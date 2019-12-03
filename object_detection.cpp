@@ -36,7 +36,7 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
 
         if( !cudaAllocMapped((void**)cpu, (void**)gpu, imgSize) )
         {
-                printf("failed to allocate %zu bytes for image '%s'\n", imgSize);
+                printf("failed to allocate %zu bytes for image \n", imgSize);
                 return false;
         }
 
