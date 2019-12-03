@@ -28,7 +28,7 @@ int main( int argc, char** argv ){
 
 	cv::cvtColor(img,img,CV_BGRA2RGBA);
 
-	img.convterTo(img,CV_32FC4, 1/255.0);
+	img.convtertTo(img,CV_32FC4, 1/255.0);
 
 	/*
 	 * create detection network
