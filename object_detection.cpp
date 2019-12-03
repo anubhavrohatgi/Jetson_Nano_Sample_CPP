@@ -40,7 +40,7 @@ int main( int argc, char** argv ){
 	}
 
 	// parse overlay flags
-	const uint32_t overlayFlags = detectNet::OverlayFlagsFromStr("overlay", "box,labels,conf");
+	const uint32_t overlayFlags = detectNet::OverlayFlagsFromStr("box,labels,conf");
 
 	
 	/*
