@@ -86,7 +86,7 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
         *width  = imgWidth;
         *height = imgHeight;
 
-        free(img);
+//        free(img);
         return true;
 }
 
@@ -158,7 +158,7 @@ int main( int argc, char** argv ){
 		printf("bounding box %u  (%f, %f)  (%f, %f)  w=%f  h=%f\n", detections[n].Instance, detections[n].Left, detections[n].Top, detections[n].Right, detections[n].Bottom, detections[n].Width(), detections[n].Height()); 
 	}
 	
-	// print out timing info
+        // print out timing info
 	net->PrintProfilerTimes();
 
 
