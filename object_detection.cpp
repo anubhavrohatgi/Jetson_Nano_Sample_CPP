@@ -9,7 +9,85 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+// loadImageRGBA
+bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* height, const float4& mean=make_float4(0,0,0,0))
+{
+        // validate parameters
+        if( !cpu || !gpu || !width || !height )
+        {
+                printf(LOG_IMAGE "loadImageRGBA() - invalid parameter(s)\n");
+                return NULL;
+        }
 
+        // attempt to load the data from disk
+        int imgWidth = *width;
+        int imgHeight = *height;
+        int imgChannels = 4;
+
+        unsigned char* img = mimg.data;
+
+        if( !img )
+                return false;
+
+
+        // allocate CUDA buffer for the image
+        const size_t imgSize = imgWidth * imgHeight * sizeof(float) * 4;
+
+        if( !cudaAllocMapped((void**)cpu, (void**)gpu, imgSize) )
+        {
+                printf(LOG_CUDA "failed to allocate %zu bytes for image '%s'\n", imgSize, filename);
+                return false;
+        }
+
+
+        // convert uint8 image to float4
+        float4* cpuPtr = *cpu;
+
+        for( int y=0; y < imgHeight; y++ )
+        {
+                const size_t yOffset = y * imgWidth * imgChannels * sizeof(unsigned char);
+
+                for( int x=0; x < imgWidth; x++ )
+                {
+                        #define GET_PIXEL(channel)	    float(img[offset + channel])
+                        #define SET_PIXEL_FLOAT4(r,g,b,a) cpuPtr[y*imgWidth+x] = make_float4(r,g,b,a)
+
+                        const size_t offset = yOffset + x * imgChannels * sizeof(unsigned char);
+
+                        switch(imgChannels)
+                        {
+                                case 1:
+                                {
+                                        const float grey = GET_PIXEL(0);
+                                        SET_PIXEL_FLOAT4(grey - mean.x, grey - mean.y, grey - mean.z, 255.0f - mean.w);
+                                        break;
+                                }
+                                case 2:
+                                {
+                                        const float grey = GET_PIXEL(0);
+                                        SET_PIXEL_FLOAT4(grey - mean.x, grey - mean.y, grey - mean.z, GET_PIXEL(1) - mean.w);
+                                        break;
+                                }
+                                case 3:
+                                {
+                                        SET_PIXEL_FLOAT4(GET_PIXEL(0) - mean.x, GET_PIXEL(1) - mean.y, GET_PIXEL(2) - mean.z, 255.0f - mean.w);
+                                        break;
+                                }
+                                case 4:
+                                {
+                                        SET_PIXEL_FLOAT4(GET_PIXEL(0) - mean.x, GET_PIXEL(1) - mean.y, GET_PIXEL(2) - mean.z, GET_PIXEL(3) - mean.w);
+                                        break;
+                                }
+                        }
+                }
+        }
+
+        *width  = imgWidth;
+        *height = imgHeight;
+
+        free(img);
+        return true;
+}
 int main( int argc, char** argv ){
 	if( argc < 2 ) {
 		printf("object_recognition:  expected image filename as argument\n");
@@ -28,7 +106,7 @@ int main( int argc, char** argv ){
 
 	cv::cvtColor(img,img,CV_BGRA2RGBA);
 
-	img.convertTo(img,CV_32FC4, 1/255.0);
+//	img.convertTo(img,CV_32FC4, 1/255.0);
 
 	/*
 	 * create detection network
@@ -50,14 +128,14 @@ int main( int argc, char** argv ){
 	 */
 	float* imgCPU    = NULL;
 	float* imgCUDA   = img.ptr<float>();
-	int    imgWidth  = 0;
-	int    imgHeight = 0;
+        int    imgWidth  = img.cols;
+        int    imgHeight = img.rows;
 		
-	//if( !loadImageRGBA(imgFilename, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
-	//{
-	//	printf("failed to load image '%s'\n", imgFilename);
-	//	return 0;
-	//}
+        if( !loadImageRGBA(imgFilename, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
+        {
+                printf("failed to load image '%s'\n", imgFilename);
+                return 0;
+        }
 	
 
 	/*
