@@ -131,7 +131,7 @@ int main( int argc, char** argv ){
 	 * load image from disk
 	 */
 	float* imgCPU    = NULL;
-	float* imgCUDA   = img.ptr<float>();
+        float* imgCUDA   = NULL;
         int    imgWidth  = img.cols;
         int    imgHeight = img.rows;
 		
@@ -167,7 +167,7 @@ int main( int argc, char** argv ){
 	 */
 	printf("detectnet-console:  shutting down...\n");
 
-	//CUDA(cudaFreeHost(imgCPU));
+        CUDA(cudaFreeHost(imgCPU));
 	SAFE_DELETE(net);
 
 	printf("detectnet-console:  shutdown complete\n");
