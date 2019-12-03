@@ -40,7 +40,7 @@ int main( int argc, char** argv ){
 	}
 
 	// parse overlay flags
-	const uint32_t overlayFlags = detectNet::OverlayFlagsFromStr(cmdLine.GetString("overlay", "box,labels,conf"));
+	const uint32_t overlayFlags = detectNet::OverlayFlagsFromStr("overlay", "box,labels,conf");
 
 	
 	/*
@@ -76,19 +76,6 @@ int main( int argc, char** argv ){
 	
 	// print out timing info
 	net->PrintProfilerTimes();
-	
-	// save image to disk
-	const char* outputFilename = cmdLine.GetPosition(1);
-	
-	if( outputFilename != NULL )
-	{
-		printf("detectnet-console:  writing %ix%i image to '%s'\n", imgWidth, imgHeight, outputFilename);
-		
-		if( !saveImageRGBA(outputFilename, (float4*)imgCPU, imgWidth, imgHeight, 255.0f) )
-			printf("detectnet-console:  failed saving %ix%i image to '%s'\n", imgWidth, imgHeight, outputFilename);
-		else	
-			printf("detectnet-console:  successfully wrote %ix%i image to '%s'\n", imgWidth, imgHeight, outputFilename);
-	}
 
 
 	/*
