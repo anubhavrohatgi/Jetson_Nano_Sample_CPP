@@ -1,11 +1,14 @@
 // Object Recognition example code from NVIDIA
 // See https://github.com/dusty-nv/jetson-inference/blob/master/examples/my-recognition/my-recognition.cpp
 
-#include <jetson-inference/imageNet.h>
+#include <jetson-inference/detectNet.h>
 #include <jetson-utils/loadImage.h>
+
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
+
 
 int main( int argc, char** argv ){
 	if( argc < 2 ) {
