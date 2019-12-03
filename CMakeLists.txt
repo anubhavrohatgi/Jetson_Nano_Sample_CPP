@@ -10,11 +10,11 @@ project(object_detection)
 find_package(jetson-utils)
 find_package(jetson-inference)
 
-#for OpenCV libraries version > 4
+#for OpenCV libraries version > 3
 #Find and add opencv libraries
-find_package(OpenCV REQUIRED core imgproc highgui imgcodecs video)
+find_package(OpenCV 3.0.0 REQUIRED core imgproc highgui imgcodecs)
 
-if(${OpenCV_VERSION} VERSION_LESS 4.0.0)
+if(${OpenCV_VERSION} VERSION_LESS 3.0.0)
     MESSAGE(FATAL_ERROR "OpenCV version is not compatible : ${OpenCV_VERSION}")
 else()
     MESSAGE("OpenCV version found : ${OpenCV_VERSION}")

@@ -26,7 +26,7 @@ int main( int argc, char** argv ){
 		return 0;
 	}
 
-	cv::cvtColor(img,img,cv::COLOR_BGRA2RGBA);
+	cv::cvtColor(img,img,CV_BGRA2RGBA);
 
 	/*
 	 * create detection network
