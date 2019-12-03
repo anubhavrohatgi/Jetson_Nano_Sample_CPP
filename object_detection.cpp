@@ -11,7 +11,7 @@
 #include <opencv2/imgcodecs.hpp>
 
 // loadImageRGBA
-bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* height, const float4& mean=make_float4(0,0,0,0))
+bool cvt2CudaRGBA(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* height, const float4& mean=make_float4(0,0,0,0))
 {
         // validate parameters
         if( !cpu || !gpu || !width || !height )
@@ -90,6 +90,79 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
         return true;
 }
 
+// loadImageBGR
+bool cvtCudaBGR( const cv::Mat& mimg, float3** cpu, float3** gpu, int* width, int* height, const float3& mean=make_float3(0,0,0) )
+{
+        // validate parameters
+        if(!cpu || !gpu || !width || !height )
+        {
+                printf("loadImageRGB() - invalid parameter(s)\n");
+                return NULL;
+        }
+
+        // attempt to load the data from disk
+        int imgWidth = *width;
+        int imgHeight = *height;
+        int imgChannels = 3;
+
+        unsigned char* img = mimg.data;
+
+        if( !img )
+                return false;
+
+
+        // allocate CUDA buffer for the image
+        const size_t imgSize = imgWidth * imgHeight * sizeof(float) * 3;
+
+        if( !cudaAllocMapped((void**)cpu, (void**)gpu, imgSize) )
+        {
+                printf("failed to allocate %zu bytes for image \n", imgSize);
+                return false;
+        }
+
+
+        // convert uint8 image to float4
+        float3* cpuPtr = *cpu;
+
+        for( int y=0; y < imgHeight; y++ )
+        {
+                const size_t yOffset = y * imgWidth * imgChannels * sizeof(unsigned char);
+
+                for( int x=0; x < imgWidth; x++ )
+                {
+                        #define SET_PIXEL_FLOAT3(r,g,b) cpuPtr[y*imgWidth+x] = make_float3(r,g,b)
+
+                        const size_t offset = yOffset + x * imgChannels * sizeof(unsigned char);
+
+                        switch(imgChannels)
+                        {
+                                case 1:
+                                {
+                                        const float grey = GET_PIXEL(0);
+                                        SET_PIXEL_FLOAT3(grey - mean.x, grey - mean.y, grey - mean.z);
+                                        break;
+                                }
+                                case 2:
+                                {
+                                        const float grey = GET_PIXEL(0);
+                                        SET_PIXEL_FLOAT3(grey - mean.x, grey - mean.y, grey - mean.z);
+                                        break;
+                                }
+                                case 3:
+                                case 4:
+                                {
+                                        SET_PIXEL_FLOAT3(GET_PIXEL(2) - mean.x, GET_PIXEL(1) - mean.y, GET_PIXEL(0) - mean.z);
+                                        break;
+                                }
+                        }
+                }
+        }
+
+        *width  = imgWidth;
+        *height = imgHeight;
+
+        return true;
+}
 
 int main( int argc, char** argv ){
 	if( argc < 2 ) {
@@ -107,7 +180,7 @@ int main( int argc, char** argv ){
 		return 0;
 	}
 
-	cv::cvtColor(img,img,CV_BGRA2RGBA);
+//	cv::cvtColor(img,img,CV_BGRA2RGBA);
 
 //	img.convertTo(img,CV_32FC4, 1/255.0);
 
@@ -135,7 +208,7 @@ int main( int argc, char** argv ){
         int    imgWidth  = img.cols;
         int    imgHeight = img.rows;
 		
-        if( !cvt2Cuda(img, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
+        if( !cvtCudaBGR(img, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
         {
                 printf("failed to load image '%s'\n", imgFilename);
                 return 0;
