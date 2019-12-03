@@ -111,6 +111,7 @@ int main( int argc, char** argv ){
 
 //	img.convertTo(img,CV_32FC4, 1/255.0);
 
+
 	/*
 	 * create detection network
 	 */
@@ -134,7 +135,7 @@ int main( int argc, char** argv ){
         int    imgWidth  = img.cols;
         int    imgHeight = img.rows;
 		
-        if( !loadImageRGBA(imgFilename, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
+        if( !cvt2Cuda(img, (float4**)&imgCPU, (float4**)&imgCUDA, &imgWidth, &imgHeight) )
         {
                 printf("failed to load image '%s'\n", imgFilename);
                 return 0;
