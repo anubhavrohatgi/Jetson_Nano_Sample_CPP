@@ -3,6 +3,7 @@
 
 #include <jetson-inference/detectNet.h>
 #include <jetson-utils/loadImage.h>
+#include <jetson-utils/cudaMappedMemory.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
@@ -15,7 +16,7 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
         // validate parameters
         if( !cpu || !gpu || !width || !height )
         {
-                printf(LOG_IMAGE "loadImageRGBA() - invalid parameter(s)\n");
+                printf("loadImageRGBA() - invalid parameter(s)\n");
                 return NULL;
         }
 
@@ -35,7 +36,7 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
 
         if( !cudaAllocMapped((void**)cpu, (void**)gpu, imgSize) )
         {
-                printf(LOG_CUDA "failed to allocate %zu bytes for image '%s'\n", imgSize, filename);
+                printf("failed to allocate %zu bytes for image '%s'\n", imgSize);
                 return false;
         }
 
@@ -88,6 +89,8 @@ bool cvt2Cuda(const cv::Mat& mimg, float4** cpu, float4** gpu, int* width, int* 
         free(img);
         return true;
 }
+
+
 int main( int argc, char** argv ){
 	if( argc < 2 ) {
 		printf("object_recognition:  expected image filename as argument\n");
